@@ -1,0 +1,33 @@
+spring:
+  application:
+    name: github-mcp-client
+  ai:
+    openai:
+      api-key: ${OPENAI_API_KEY}
+      chat:
+        options:
+          model: ${OPENAI_MODEL:gpt-5.4-mini}
+    mcp:
+      client:
+        name: github-mcp-client
+        type: SYNC
+        request-timeout: 60s
+        streamable-http:
+          connections:
+            github:
+              url: https://api.githubcopilot.com
+              endpoint: /mcp/
+
+github:
+  mcp:
+    connection-name: github
+    token: ${GITHUB_PAT:}
+    # See https://github.com/github/github-mcp-server#available-toolsets
+    toolsets: ${GITHUB_MCP_TOOLSETS:repos,issues,pull_requests}
+    read-only: ${GITHUB_MCP_READ_ONLY:true}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
