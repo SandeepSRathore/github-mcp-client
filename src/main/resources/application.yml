@@ -26,6 +26,11 @@ github:
     toolsets: ${GITHUB_MCP_TOOLSETS:repos,issues,pull_requests}
     read-only: ${GITHUB_MCP_READ_ONLY:true}
 
+server:
+  # The API has no authentication and runs on your GitHub token and OpenAI key,
+  # so only accept connections from this machine. Add authentication before exposing it.
+  address: ${SERVER_ADDRESS:127.0.0.1}
+
 management:
   endpoints:
     web:

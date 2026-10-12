@@ -69,9 +69,23 @@ the token is invalid, startup fails with an MCP authorization error.
 | `OPENAI_MODEL` | `gpt-5.4-mini` | OpenAI chat model (see [Model choice](#model-choice)) |
 | `GITHUB_MCP_TOOLSETS` | `repos,issues,pull_requests` | [GitHub MCP toolsets](https://github.com/github/github-mcp-server#available-toolsets) to expose; `all` for everything |
 | `GITHUB_MCP_READ_ONLY` | `true` | Only expose read-only tools. Set `false` to allow creating issues, comments, etc. |
+| `SERVER_ADDRESS` | `127.0.0.1` | Network interface the HTTP server listens on (see [Security](#security)) |
 
 Keeping the toolset list small matters: every exposed tool's schema is sent to the LLM on each
 request, so fewer tools means fewer tokens and better tool selection.
+
+## Security
+
+The API has **no authentication**, and every request runs on *your* GitHub token and OpenAI
+key. Anyone who can reach the port could read whatever your token can see (including private
+repos) and spend your OpenAI credit. The app therefore listens on `127.0.0.1` only, so other
+machines on your network cannot connect.
+
+Before exposing it (e.g. `SERVER_ADDRESS=0.0.0.0` or deploying to a server):
+
+- add authentication, such as Spring Security or an API-key header check;
+- use a **fine-grained PAT** scoped to just the repos you need, not your personal `gh` login token;
+- keep `GITHUB_MCP_READ_ONLY=true` unless you really need write tools.
 
 ## API
 
